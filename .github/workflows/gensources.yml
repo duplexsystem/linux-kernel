@@ -41,6 +41,13 @@ jobs:
           name: linux-kernel.tar.gz
           path: linux-kernel.tar.gz
           
+      - name: Tag Repo
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
