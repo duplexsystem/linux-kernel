@@ -17,7 +17,7 @@ else
 fi
 
 # apply patches from main git repo in numerical order
-for D in ../patches/*/; do  git am  --ignore-whitespace ${D}*.patch; done
+for D in ../patches/*/; do  git am --whitespace=fix  ${D}*.patch; done
 
 
 
