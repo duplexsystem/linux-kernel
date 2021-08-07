@@ -23,7 +23,7 @@ jobs:
         run: ./patch.sh
         
       - name: tar
-        run: tar -czvf linux-kernel.tar.gz linux
+        run: tar --exclude='linux/.git' -czvf linux-kernel.tar.gz linux
       
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.4
