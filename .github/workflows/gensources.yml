@@ -27,7 +27,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./linux
-          key: ${{ stepskernel.outputs.version }}
+          key: ${{ steps.kernel.outputs.version }}
       
       - name: patch
         run: ./patch.sh
