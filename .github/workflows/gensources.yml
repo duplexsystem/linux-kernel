@@ -41,14 +41,22 @@ jobs:
           name: linux-kernel.tar.gz
           path: linux-kernel.tar.gz
           
+      - uses: actions/github-script@v4
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const { owner, repo } = context.repo
+            const { data: { id } } = await github.repos.getLatestRelease({ owner, repo })
+            await github.repos.deleteRelease({ owner, repo, release_id: id })
+          
       - name: create draft release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.kernel.outputs.version }}-latest
-          release_name: ${{ steps.kernel.outputs.version }}-latest
+          tag_name: latest
+          release_name: latest
           draft: true
           prerelease: false
 
@@ -58,7 +66,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./linux-kernel.tar.gz
-          asset_name: linux sources
+          asset_name: linux sources ${{ steps.kernel.outputs.version }}
           asset_content_type: application/gzip
 
       - uses: eregon/publish-release@v1
