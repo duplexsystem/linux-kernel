@@ -41,13 +41,29 @@ jobs:
           name: source
           path: linux-kernel.tar.gz
           
-      - name: releases-action
-        # You may pin to the exact commit or the version.
-        # uses: nickatnight/releases-action@893540eb446b37c82cf414f2bb439e805e70b41f
-        uses: nickatnight/releases-action@v2
+      - name: create draft release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # Name of the release
-          name: ${{ github.sha }}
-          # Message for the release
-          message: auto genereted release
+          tag_name: ${{ steps.kernel.outputs.version }}-latest
+          release_name: ${{ steps.kernel.outputs.version }}-latest
+          draft: true
+          prerelease: false
+
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./linux-kernel.tar.gz
+          asset_name: linux sources
+          asset_content_type: application/gzip
+
+      - uses: eregon/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_id: ${{ steps.create_release.outputs.id }}
         
