@@ -38,7 +38,7 @@ jobs:
       - name: upload a build artifact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: source
+          name: linux-kernel.tar.gz
           path: linux-kernel.tar.gz
           
       - name: create draft release
