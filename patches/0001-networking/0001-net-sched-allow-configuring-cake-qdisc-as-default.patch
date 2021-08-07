@@ -1,0 +1,34 @@
+From c84ac284671b650dfe6c618798b04e5f820caa65 Mon Sep 17 00:00:00 2001
+From: Alexandre Frade <admfrade@gmail.com>
+Date: Wed, 24 Oct 2018 16:58:52 -0300
+Subject: net/sched: allow configuring cake qdisc as default
+
+---
+ net/sched/Kconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/net/sched/Kconfig b/net/sched/Kconfig
+index 1e8ab4749c6c..854d85fe75fe 100644
+--- a/net/sched/Kconfig
++++ b/net/sched/Kconfig
+@@ -474,6 +474,9 @@ choice
+ 	config DEFAULT_SFQ
+ 		bool "Stochastic Fair Queue" if NET_SCH_SFQ
+ 
++	config DEFAULT_CAKE
++		bool "Common Applications Kept Enhanced" if NET_SCH_CAKE
++
+ 	config DEFAULT_PFIFO_FAST
+ 		bool "Priority FIFO Fast"
+ endchoice
+@@ -484,6 +487,7 @@ config DEFAULT_NET_SCH
+ 	default "fq" if DEFAULT_FQ
+ 	default "fq_codel" if DEFAULT_FQ_CODEL
+ 	default "fq_pie" if DEFAULT_FQ_PIE
++	default "cake" if DEFAULT_CAKE
+ 	default "sfq" if DEFAULT_SFQ
+ 	default "pfifo_fast"
+ endif
+-- 
+2.32.0
+
