@@ -55,9 +55,9 @@ index f60ef0b4ec33..225e51d3b9ef 100644
  static int
  select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
  {
-@@ -6860,6 +6864,21 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
- 		want_affine = !wake_wide(p) && cpumask_test_cpu(cpu, p->cpus_ptr);
+@@ -7206,6 +7210,20 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
  	}
+ #endif /* CONFIG_CACULE_SCHED */
  
 +	if (prev_cpu != best_core && prev_cpu != second_best_core &&
 +		       cpu_rq(prev_cpu)->nr_running != 0) {
@@ -72,7 +72,6 @@ index f60ef0b4ec33..225e51d3b9ef 100644
 +	if (prev_cpu > 0 && cpu_rq(prev_cpu)->nr_running != 0 && cpu_rq(prev_cpu - 1)->nr_running == 0)
 +		prev_cpu = prev_cpu - 1;
 +*/
-+
 +
  	rcu_read_lock();
  	for_each_domain(cpu, tmp) {
