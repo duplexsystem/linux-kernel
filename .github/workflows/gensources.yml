@@ -30,4 +30,10 @@ jobs:
         with:
           name: source
           path: linux-kernel.tar.gz
+          
+      - name: Release
+        uses: fnkr/github-action-ghr@v1
+        env:
+          GHR_PATH: linux-kernel.tar.gz
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
