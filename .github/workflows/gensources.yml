@@ -20,7 +20,7 @@ jobs:
          git config --global gc.auto 0
          
       - name: get kernel version
-        run: echo "::set-output name=version::$(cat "./patch.sh" | grep BRANCH | cut -d '=' -f2)" 
+        run: echo "::set-output name=version::$(cat "./patch.sh" | grep BRANCH= | cut -d '=' -f2)" 
         id: kernel
          
       - name: pull gradle cache
