@@ -1,7 +1,7 @@
-From 48f06a6457a3a4862ae01540dab8b4f11977f5e4 Mon Sep 17 00:00:00 2001
+From 0624f491b7d2780499af32d78dcb32798d69ef1a Mon Sep 17 00:00:00 2001
 From: Yu Zhao <yuzhao@google.com>
 Date: Thu, 20 May 2021 00:53:52 -0600
-Subject: [PATCH 11/14] mm: multigenerational lru: eviction
+Subject: [PATCH 11/22] mm: multigenerational lru: eviction
 
 The eviction consumes old generations. Given an lruvec, the eviction
 scans the pages on the per-zone lists indexed by either of min_seq[2].
@@ -33,7 +33,7 @@ Tested-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
  2 files changed, 545 insertions(+)
 
 diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 38de59fcbe54..ded72f44d7e7 100644
+index 38de59f..ded72f4 100644
 --- a/include/linux/mmzone.h
 +++ b/include/linux/mmzone.h
 @@ -863,6 +863,8 @@ struct deferred_split {
@@ -56,7 +56,7 @@ index 38de59fcbe54..ded72f44d7e7 100644
  
  	/* Per-node vmstats */
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index f18757d90c46..6d759028c510 100644
+index 837d5e6..2f86dcc 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
 @@ -1311,6 +1311,11 @@ static unsigned int shrink_page_list(struct list_head *page_list,
@@ -670,5 +670,5 @@ index f18757d90c46..6d759028c510 100644
  }
  
 -- 
-2.32.0
+2.32.0.452.g940fe202ad
 

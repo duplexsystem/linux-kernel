@@ -1,7 +1,7 @@
-From 13254efc25a9429fa5541ce9e4c0878de72f398a Mon Sep 17 00:00:00 2001
+From faedb491dae847b5079e927e624ed5e33b13f45c Mon Sep 17 00:00:00 2001
 From: Yu Zhao <yuzhao@google.com>
 Date: Thu, 20 May 2021 00:53:55 -0600
-Subject: [PATCH 14/14] mm: multigenerational lru: documentation
+Subject: [PATCH 14/22] mm: multigenerational lru: documentation
 
 Add Documentation/vm/multigen_lru.rst.
 
@@ -14,7 +14,7 @@ Tested-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
  create mode 100644 Documentation/vm/multigen_lru.rst
 
 diff --git a/Documentation/vm/index.rst b/Documentation/vm/index.rst
-index eff5fbd492d0..c353b3f55924 100644
+index eff5fbd..c353b3f 100644
 --- a/Documentation/vm/index.rst
 +++ b/Documentation/vm/index.rst
 @@ -17,6 +17,7 @@ various features of the Linux memory management
@@ -27,7 +27,7 @@ index eff5fbd492d0..c353b3f55924 100644
  ==================================
 diff --git a/Documentation/vm/multigen_lru.rst b/Documentation/vm/multigen_lru.rst
 new file mode 100644
-index 000000000000..a18416ed7e92
+index 0000000..a18416e
 --- /dev/null
 +++ b/Documentation/vm/multigen_lru.rst
 @@ -0,0 +1,143 @@
@@ -175,5 +175,5 @@ index 000000000000..a18416ed7e92
 +-----------------
 +Optimize page table scan for NUMA.
 -- 
-2.32.0
+2.32.0.452.g940fe202ad
 

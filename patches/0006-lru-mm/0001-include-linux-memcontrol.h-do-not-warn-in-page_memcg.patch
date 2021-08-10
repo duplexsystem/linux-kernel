@@ -1,7 +1,7 @@
-From f6a5ac2f99019609c46bfbd6ec097d4867e8c377 Mon Sep 17 00:00:00 2001
+From 5ddbad434db7ab0aa9ad8b9a94507d49929ef872 Mon Sep 17 00:00:00 2001
 From: Yu Zhao <yuzhao@google.com>
 Date: Thu, 20 May 2021 00:53:42 -0600
-Subject: [PATCH 01/14] include/linux/memcontrol.h: do not warn in
+Subject: [PATCH 01/22] include/linux/memcontrol.h: do not warn in
  page_memcg_rcu() if !CONFIG_MEMCG
 
 page_memcg_rcu() warns on !rcu_read_lock_held() regardless of
@@ -36,7 +36,7 @@ Tested-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
  1 file changed, 1 deletion(-)
 
 diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index c193be760709..6bcac3d91dd1 100644
+index c193be7..6bcac3d 100644
 --- a/include/linux/memcontrol.h
 +++ b/include/linux/memcontrol.h
 @@ -1131,7 +1131,6 @@ static inline struct mem_cgroup *page_memcg(struct page *page)
@@ -48,5 +48,5 @@ index c193be760709..6bcac3d91dd1 100644
  }
  
 -- 
-2.32.0
+2.32.0.452.g940fe202ad
 

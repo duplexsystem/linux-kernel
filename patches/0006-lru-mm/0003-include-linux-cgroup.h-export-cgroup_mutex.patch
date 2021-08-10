@@ -1,7 +1,7 @@
-From ca9c490417125ab19628320ef6edb5c52e95eff4 Mon Sep 17 00:00:00 2001
+From b947263ad6e69a179763ecc49b0cbbc787e54348 Mon Sep 17 00:00:00 2001
 From: Yu Zhao <yuzhao@google.com>
 Date: Thu, 20 May 2021 00:53:44 -0600
-Subject: [PATCH 03/14] include/linux/cgroup.h: export cgroup_mutex
+Subject: [PATCH 03/22] include/linux/cgroup.h: export cgroup_mutex
 
 cgroup_mutex is needed to synchronize with memcg creations.
 
@@ -12,7 +12,7 @@ Tested-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
  1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-index 6bc9c76680b2..e52e44af6810 100644
+index 6bc9c76..e52e44a 100644
 --- a/include/linux/cgroup.h
 +++ b/include/linux/cgroup.h
 @@ -432,6 +432,18 @@ static inline void cgroup_put(struct cgroup *cgrp)
@@ -52,5 +52,5 @@ index 6bc9c76680b2..e52e44af6810 100644
  					 struct task_struct *t) { return 0; }
  static inline int cgroupstats_build(struct cgroupstats *stats,
 -- 
-2.32.0
+2.32.0.452.g940fe202ad
 

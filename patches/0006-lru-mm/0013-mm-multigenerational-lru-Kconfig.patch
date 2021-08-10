@@ -1,7 +1,7 @@
-From 7585161cf89f0d90e808ce10667efdbd7762f76c Mon Sep 17 00:00:00 2001
+From 4105b433c5df68cfedca9e503219aa66a3c5ba0e Mon Sep 17 00:00:00 2001
 From: Yu Zhao <yuzhao@google.com>
 Date: Thu, 20 May 2021 00:53:54 -0600
-Subject: [PATCH 13/14] mm: multigenerational lru: Kconfig
+Subject: [PATCH 13/22] mm: multigenerational lru: Kconfig
 
 Add configuration options for the multigenerational lru.
 
@@ -12,7 +12,7 @@ Tested-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
  1 file changed, 58 insertions(+)
 
 diff --git a/mm/Kconfig b/mm/Kconfig
-index 02d44e3420f5..da125f145bc4 100644
+index 02d44e3..da125f1 100644
 --- a/mm/Kconfig
 +++ b/mm/Kconfig
 @@ -901,4 +901,62 @@ config KMAP_LOCAL
@@ -79,5 +79,5 @@ index 02d44e3420f5..da125f145bc4 100644
 +
  endmenu
 -- 
-2.32.0
+2.32.0.452.g940fe202ad
 

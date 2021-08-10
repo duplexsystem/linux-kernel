@@ -1,7 +1,7 @@
-From 67268761c200722a6f5b8e974e2c69526246f79d Mon Sep 17 00:00:00 2001
+From ab7be11f9202862a277217725d8a9ed23f7efd3f Mon Sep 17 00:00:00 2001
 From: Yu Zhao <yuzhao@google.com>
 Date: Thu, 20 May 2021 00:53:49 -0600
-Subject: [PATCH 08/14] mm: multigenerational lru: activation
+Subject: [PATCH 08/22] mm: multigenerational lru: activation
 
 For pages accessed multiple times via file descriptors, instead of
 activating them upon the second access, we activate them based on the
@@ -61,7 +61,7 @@ Tested-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
  12 files changed, 269 insertions(+), 22 deletions(-)
 
 diff --git a/include/linux/mm_inline.h b/include/linux/mm_inline.h
-index ae3e3826dd7f..f3b99f65a652 100644
+index ae3e382..f3b99f6 100644
 --- a/include/linux/mm_inline.h
 +++ b/include/linux/mm_inline.h
 @@ -103,6 +103,12 @@ static inline int lru_gen_from_seq(unsigned long seq)
@@ -126,7 +126,7 @@ index ae3e3826dd7f..f3b99f65a652 100644
  
  static __always_inline void add_page_to_lru_list(struct page *page,
 diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 144727041e78..30b1f15f5c6e 100644
+index 1447270..30b1f15 100644
 --- a/include/linux/swap.h
 +++ b/include/linux/swap.h
 @@ -365,8 +365,8 @@ extern void deactivate_page(struct page *page);
@@ -141,7 +141,7 @@ index 144727041e78..30b1f15f5c6e 100644
  /* linux/mm/vmscan.c */
  extern unsigned long zone_reclaimable_pages(struct zone *zone);
 diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 6addc9780319..4e93e5602723 100644
+index 6addc97..4e93e56 100644
 --- a/kernel/events/uprobes.c
 +++ b/kernel/events/uprobes.c
 @@ -184,7 +184,7 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
@@ -154,10 +154,10 @@ index 6addc9780319..4e93e5602723 100644
  		/* no new page, just dec_mm_counter for old_page */
  		dec_mm_counter(mm, MM_ANONPAGES);
 diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index ba583649150d..64c70c322ac4 100644
+index 113e367..4b852c5 100644
 --- a/mm/huge_memory.c
 +++ b/mm/huge_memory.c
-@@ -639,7 +639,7 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
+@@ -648,7 +648,7 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
  		entry = mk_huge_pmd(page, vma->vm_page_prot);
  		entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
  		page_add_new_anon_rmap(page, vma, haddr, true);
@@ -167,10 +167,10 @@ index ba583649150d..64c70c322ac4 100644
  		set_pmd_at(vma->vm_mm, haddr, vmf->pmd, entry);
  		update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 6c0185fdd815..09e5346c2754 100644
+index d97b20f..6354edc 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -1198,7 +1198,7 @@ static void collapse_huge_page(struct mm_struct *mm,
+@@ -1196,7 +1196,7 @@ static void collapse_huge_page(struct mm_struct *mm,
  	spin_lock(pmd_ptl);
  	BUG_ON(!pmd_none(*pmd));
  	page_add_new_anon_rmap(new_page, vma, address, true);
@@ -180,10 +180,10 @@ index 6c0185fdd815..09e5346c2754 100644
  	set_pmd_at(mm, address, pmd, _pmd);
  	update_mmu_cache_pmd(vma, address, pmd);
 diff --git a/mm/memory.c b/mm/memory.c
-index 216a03351556..fd52f3c0ca1a 100644
+index f2293c0..edc74c2 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -839,7 +839,7 @@ copy_present_page(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
+@@ -841,7 +841,7 @@ copy_present_page(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
  	copy_user_highpage(new_page, page, addr, src_vma);
  	__SetPageUptodate(new_page);
  	page_add_new_anon_rmap(new_page, dst_vma, addr, false);
@@ -229,7 +229,7 @@ index 216a03351556..fd52f3c0ca1a 100644
  		inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
  		page_add_file_rmap(page, false);
 diff --git a/mm/migrate.c b/mm/migrate.c
-index 41ff2c9896c4..e103ab266d97 100644
+index 047209d..2bd6182 100644
 --- a/mm/migrate.c
 +++ b/mm/migrate.c
 @@ -2968,7 +2968,7 @@ static void migrate_vma_insert_page(struct migrate_vma *migrate,
@@ -242,7 +242,7 @@ index 41ff2c9896c4..e103ab266d97 100644
  
  	if (flush) {
 diff --git a/mm/swap.c b/mm/swap.c
-index dfb48cf9c2c9..96ce95eeb2c9 100644
+index dfb48cf..96ce95e 100644
 --- a/mm/swap.c
 +++ b/mm/swap.c
 @@ -433,6 +433,8 @@ void mark_page_accessed(struct page *page)
@@ -314,7 +314,7 @@ index dfb48cf9c2c9..96ce95eeb2c9 100644
  
  		local_lock(&lru_pvecs.lock);
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 4de425e43675..8b5ca15df123 100644
+index 4de425e..8b5ca15 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
 @@ -1936,7 +1936,7 @@ static int unuse_pte(struct vm_area_struct *vma, pmd_t *pmd,
@@ -327,7 +327,7 @@ index 4de425e43675..8b5ca15df123 100644
  	swap_free(entry);
  out:
 diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 63a73e164d55..747a2d7eb5b6 100644
+index 63a73e1..747a2d7 100644
 --- a/mm/userfaultfd.c
 +++ b/mm/userfaultfd.c
 @@ -123,7 +123,7 @@ static int mcopy_atomic_pte(struct mm_struct *dst_mm,
@@ -340,7 +340,7 @@ index 63a73e164d55..747a2d7eb5b6 100644
  	set_pte_at(dst_mm, dst_addr, dst_pte, _dst_pte);
  
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 3c3f6e0d0257..2e335711459d 100644
+index f7bbfc0..84d2507 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
 @@ -1094,9 +1094,11 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
@@ -451,7 +451,7 @@ index 3c3f6e0d0257..2e335711459d 100644
   *                          state change
   ******************************************************************************/
 diff --git a/mm/workingset.c b/mm/workingset.c
-index edb8aed2587e..3f3f03d51ea7 100644
+index edb8aed..3f3f03d 100644
 --- a/mm/workingset.c
 +++ b/mm/workingset.c
 @@ -201,6 +201,110 @@ static unsigned long unpack_shadow(void *shadow, int *memcg_id, struct pglist_da
@@ -588,5 +588,5 @@ index edb8aed2587e..3f3f03d51ea7 100644
  
  	rcu_read_lock();
 -- 
-2.32.0
+2.32.0.452.g940fe202ad
 

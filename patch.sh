@@ -1,4 +1,4 @@
-BRANCH=v5.13
+BRANCH=v5.13.9
 
 FILE=./linux
 if [ -d "$FILE" ]; then
@@ -10,8 +10,8 @@ if [ -d "$FILE" ]; then
     git fetch origin $BRANCH
     git reset --hard $BRANCH
 else
-    #clone repo from github. was using torvalds offical but it was too slow & this is already hosted on github anyways (if that changes I'm switching back to https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git) uses set version and patchlevel for script code and less bugs from patches failing to apply and or not working correctly with new versions
-    git clone --branch $BRANCH --single-branch https://github.com/torvalds/linux.git
+    #clone repo from https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git uses set version and patchlevel for script code and less bugs from patches failing to apply and or not working correctly with new versions
+    git clone --branch $BRANCH --single-branch https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
     #enter newly cloned linux repo
     cd linux
 fi

@@ -1,7 +1,7 @@
-From d4b7b401da2714a7adb9622ad9540334069aa1df Mon Sep 17 00:00:00 2001
+From 0aff7e672f845289415b93937446d5e7fb3e934b Mon Sep 17 00:00:00 2001
 From: Yu Zhao <yuzhao@google.com>
 Date: Thu, 20 May 2021 00:53:47 -0600
-Subject: [PATCH 06/14] mm/workingset.c: refactor pack_shadow() and
+Subject: [PATCH 06/22] mm/workingset.c: refactor pack_shadow() and
  unpack_shadow()
 
 This patches moves the bucket order and PageWorkingset() out of
@@ -15,7 +15,7 @@ Tested-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
  1 file changed, 23 insertions(+), 32 deletions(-)
 
 diff --git a/mm/workingset.c b/mm/workingset.c
-index b7cdeca5a76d..edb8aed2587e 100644
+index b7cdeca..edb8aed 100644
 --- a/mm/workingset.c
 +++ b/mm/workingset.c
 @@ -168,9 +168,9 @@
@@ -137,5 +137,5 @@ index b7cdeca5a76d..edb8aed2587e 100644
  	if (max_order > timestamp_bits)
  		bucket_order = max_order - timestamp_bits;
 -- 
-2.32.0
+2.32.0.452.g940fe202ad
 

@@ -1,7 +1,7 @@
-From 1a7d050e005e0a8988f697316bb3312523778d30 Mon Sep 17 00:00:00 2001
+From 9b769c9845925243fc29f71511620f698f919ce3 Mon Sep 17 00:00:00 2001
 From: Yu Zhao <yuzhao@google.com>
 Date: Thu, 20 May 2021 00:53:46 -0600
-Subject: [PATCH 05/14] mm/vmscan.c: refactor shrink_node()
+Subject: [PATCH 05/22] mm/vmscan.c: refactor shrink_node()
 
 Heuristics that determine scan balance between anon and file LRUs are
 rather independent. Move them into a separate function to improve
@@ -14,7 +14,7 @@ Tested-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
  1 file changed, 98 insertions(+), 88 deletions(-)
 
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 5bc76e67d4de..80029649cb3c 100644
+index 5199b96..2339459 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
 @@ -2421,6 +2421,103 @@ enum scan_balance {
@@ -225,5 +225,5 @@ index 5bc76e67d4de..80029649cb3c 100644
  	shrink_node_memcgs(pgdat, sc);
  
 -- 
-2.32.0
+2.32.0.452.g940fe202ad
 

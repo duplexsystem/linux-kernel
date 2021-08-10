@@ -1,7 +1,7 @@
-From 5f940f698e98d72a16d7c7ab9bb21f33b756c67e Mon Sep 17 00:00:00 2001
+From 86b78ca9576a333fce81769b364b4ff088595390 Mon Sep 17 00:00:00 2001
 From: Yu Zhao <yuzhao@google.com>
 Date: Thu, 20 May 2021 00:53:53 -0600
-Subject: [PATCH 12/14] mm: multigenerational lru: user interface
+Subject: [PATCH 12/22] mm: multigenerational lru: user interface
 
 Add a sysfs file /sys/kernel/mm/lru_gen/enabled to enable and disable
 the multigenerational lru at runtime.
@@ -46,7 +46,7 @@ Tested-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
  1 file changed, 403 insertions(+)
 
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 6d759028c510..e89c33e596ff 100644
+index 2f86dcc..ff2deec 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
 @@ -52,6 +52,8 @@
@@ -474,5 +474,5 @@ index 6d759028c510..e89c33e596ff 100644
  };
  /*
 -- 
-2.32.0
+2.32.0.452.g940fe202ad
 

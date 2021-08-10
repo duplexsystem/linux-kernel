@@ -1,7 +1,7 @@
-From 2f9e3a866620f6f44e127db86fafbb2ad01a1c5e Mon Sep 17 00:00:00 2001
+From 7c51ebab72a696139215821ab5e4e3223643ce84 Mon Sep 17 00:00:00 2001
 From: Yu Zhao <yuzhao@google.com>
 Date: Thu, 20 May 2021 00:53:51 -0600
-Subject: [PATCH 10/14] mm: multigenerational lru: aging
+Subject: [PATCH 10/22] mm: multigenerational lru: aging
 
 The aging produces young generations. Given an lruvec, the aging scans
 page tables for referenced pages of this lruvec. Upon finding one, the
@@ -38,7 +38,7 @@ Tested-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
  3 files changed, 800 insertions(+)
 
 diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index e5deec17b4bd..38de59fcbe54 100644
+index e5deec1..38de59f 100644
 --- a/include/linux/mmzone.h
 +++ b/include/linux/mmzone.h
 @@ -294,6 +294,7 @@ enum lruvec_flags {
@@ -69,7 +69,7 @@ index e5deec17b4bd..38de59fcbe54 100644
  
  struct lruvec {
 diff --git a/mm/rmap.c b/mm/rmap.c
-index e05c300048e6..1a33e394f516 100644
+index e05c300..1a33e39 100644
 --- a/mm/rmap.c
 +++ b/mm/rmap.c
 @@ -72,6 +72,7 @@
@@ -93,7 +93,7 @@ index e05c300048e6..1a33e394f516 100644
  						pvmw.pte)) {
  				/*
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 1b1fc6a3970f..f18757d90c46 100644
+index d93d227..837d5e6 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
 @@ -50,6 +50,8 @@
@@ -906,5 +906,5 @@ index 1b1fc6a3970f..f18757d90c46 100644
  		global_mm_list = alloc_mm_list();
  		if (WARN_ON_ONCE(!global_mm_list))
 -- 
-2.32.0
+2.32.0.452.g940fe202ad
 
