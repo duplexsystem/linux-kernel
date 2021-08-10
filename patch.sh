@@ -20,4 +20,8 @@ fi
 for D in ../patches/*/; do  git am --whitespace=fix  ${D}*.patch; done
 
 
+#kiss fix
+sed '/<stdlib.h>/a #include <linux/stddef.h>' \
+    tools/objtool/arch/x86/decode.c > _
+mv -f _ tools/objtool/arch/x86/decode.c
 
